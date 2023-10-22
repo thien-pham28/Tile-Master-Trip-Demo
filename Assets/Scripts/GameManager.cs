@@ -9,6 +9,7 @@ public class GameManager : MonoBehaviour
 
     [Header("Tile Spawner")]
     [SerializeField] private GameObject tilePrefab;
+    [SerializeField] private ObjectPooling tilePool;
     [SerializeField] private Vector3 spawnAreaMax; //Max values of the spawn area
     [SerializeField] private Vector3 spawnAreaMin; //Min values of the spawn area
     [SerializeField] private Vector3 spawnRotationMax; //Max values of the spawn rotation
@@ -38,8 +39,7 @@ public class GameManager : MonoBehaviour
                     if (!Physics.CheckBox(spawnPoint, tilePrefab.transform.localScale, spawnRotation))
                     {
                         //If no collision, spawn and increment loop
-                        //temporary, change to using pooled objects instead of instantiation later
-                        GameObject tile = Instantiate(tilePrefab, spawnPoint, spawnRotation);
+                        GameObject tile = tilePool.GetPooledObject(spawnPoint, spawnRotation);
                         //Set sprite and type
                         tile.GetComponent<TileScript>().SetSprite(levelData.tileSprite[type]);
                         tile.GetComponent<TileScript>().SetType(levelData.type[type]);
@@ -48,11 +48,5 @@ public class GameManager : MonoBehaviour
                 }
             }
         }
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
     }
 }
