@@ -33,4 +33,14 @@ public class ObjectPooling : MonoBehaviour
         }
         return null;
     }
+    public void DeactivatePooledObject()
+    {
+        for (int i = 0; i < amountToPool; i++)
+        {
+            if (pooledObjects[i].activeSelf)
+            {
+                pooledObjects[i].SetActive(false);
+            }
+        }
+    }
 }

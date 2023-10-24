@@ -37,9 +37,11 @@ public class TileScript : MonoBehaviour
         {
             Touch touch = Input.GetTouch(0);
             if (touch.phase == TouchPhase.Ended && outline.enabled && !EventSystem.current.IsPointerOverGameObject())
+            {
                 GameManager.instance.SelectTile(this);
+                outline.enabled = false;
+            }
         }
-
     }
     public string GetTileType()
     {

@@ -52,6 +52,7 @@ public class GameManager : MonoBehaviour
                 //Spawn 3 for every number
                 for (int count = 0; count < 3;)
                 {
+                    //Use breaker in case infinite loop
                     if (breaker == 50)
                     {
                         Debug.Log("Breaker");
@@ -94,9 +95,12 @@ public class GameManager : MonoBehaviour
                 if (i > 0)
                     if (selectedTile[i - 1].GetTileType() == newTile.GetTileType())
                     {
-                        selectedTile[i - 1].gameObject.SetActive(false);
-                        selectedTile[i].gameObject.SetActive(false);
-                        newTile.gameObject.SetActive(false);
+                        for (int k = i - 1; k < i + 2; k++)
+                        {
+                            selectedTile[k].gameObject.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.None;
+                            selectedTile[k].gameObject.GetComponent<BoxCollider>().enabled = true;
+                            selectedTile[k].gameObject.SetActive(false);                     
+                        }
                         selectedTile.RemoveRange(i - 1, 3);
                         //Shift all the other tiles back
                         for (int j = 0; j < selectedTile.Count; j++)
@@ -122,6 +126,22 @@ public class GameManager : MonoBehaviour
             StartCoroutine(newTile.Shift(slotLocations[0], Quaternion.identity, moveSpeed));
         }
         //After loop if list count is 7, fail the game
-
+        if (selectedTile.Count >= 7)
+        {
+            //fail state
+            //enable fail menu
+        }
+    }
+    public void Restart()
+    {
+        for (int i = 0; i < selectedTile.Count; i++)
+        {
+            selectedTile[i].GetComponent<Rigidbody>().constraints = RigidbodyConstraints.None;
+            selectedTile[i].GetComponent<BoxCollider>().enabled = true;
+        }
+        selectedTile.Clear();
+        GetComponent<Menu>().CloseMenu();
+        tilePool.DeactivatePooledObject();
+        SpawnTiles(levelData[1]);
     }
 }
