@@ -19,9 +19,9 @@ MonoBehaviour:
   type:
   - Tile_0
   - Tile_2
-  - Tile_3
+  - Tile_4
   tileSprite:
-  - {fileID: 1419925017, guid: 8816415e5769297439d8ea2f9308f081, type: 3}
-  - {fileID: 1651096144, guid: 8816415e5769297439d8ea2f9308f081, type: 3}
-  - {fileID: 898477203, guid: 8816415e5769297439d8ea2f9308f081, type: 3}
+  - {fileID: 339247483, guid: 2b3027a6bafc5604a82a342e8e172fce, type: 3}
+  - {fileID: -1086747831, guid: 2b3027a6bafc5604a82a342e8e172fce, type: 3}
+  - {fileID: 2065743832, guid: 2b3027a6bafc5604a82a342e8e172fce, type: 3}
   number: 020000000200000002000000
