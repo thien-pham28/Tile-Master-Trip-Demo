@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using TMPro;
 
 public class GameManager : MonoBehaviour
 {
@@ -16,7 +18,25 @@ public class GameManager : MonoBehaviour
 
     [Header("Level Manager")]
     [SerializeField] private LevelData[] levelData;
-    [SerializeField] private float startUpTime;
+    [SerializeField] private float comboTime;
+    private float currentComboTime = 0;
+    private int combo = 0;
+    private int levelStars = 0;
+
+    [Header("UI Elements")]
+    [SerializeField] private TMP_Text timerText;
+    [SerializeField] private GameObject comboBar;
+    [SerializeField] private Slider comboSlider;
+    [SerializeField] private TMP_Text comboValue;
+    [SerializeField] private TMP_Text levelText;
+    [SerializeField] private TMP_Text starCount;
+    [SerializeField] private TMP_Text mainLevelText;
+    [SerializeField] private GameObject playButton;
+    [SerializeField] private GameObject starCounter;
+    [SerializeField] private GameObject settingsButton;
+    private float timer;
+    private bool timerIsRunning = false;
+
 
     [Header("Selector")]
     [SerializeField] private Vector3[] slotLocations;
@@ -32,13 +52,46 @@ public class GameManager : MonoBehaviour
     [SerializeField] private int spawnRotationMin; //Min y value of the spawn rotation
     private void Start()
     {
-        StartCoroutine(InitialWait(startUpTime));
-    }
 
-    IEnumerator InitialWait(float delay)
+    }
+    public void TimerStatus()
     {
-        yield return new WaitForSeconds(delay);
-        SpawnTiles(levelData[1]);
+        timerIsRunning = !timerIsRunning;
+    }
+    private void Update()
+    {
+        if (timerIsRunning)
+        {
+            if (timer > 0)
+            {
+                timer -= Time.deltaTime;
+                if (currentComboTime > 0)
+                {
+                    currentComboTime -= Time.deltaTime;
+                    comboSlider.value = currentComboTime / comboTime;
+                    comboValue.text = "Combo x " + combo;
+                }
+                else
+                {
+                    combo = 0;
+                    comboBar.SetActive(false);
+                }
+                DisplayTime(timer);
+            }
+            else
+            {
+                timer = 0;
+                timerIsRunning = false;
+                GetComponent<Menu>().OpenFailMenu("TIME'S UP!");
+            }
+        }
+    }
+    void DisplayTime(float timeToDisplay)
+    {
+        timeToDisplay += 1;
+        float minutes = Mathf.FloorToInt(timeToDisplay / 60);
+        float seconds = Mathf.FloorToInt(timeToDisplay % 60);
+        timerText.text = string.Format("{0:00}:{1:00}", minutes, seconds);
     }
     void SpawnTiles(LevelData levelData)
     {
@@ -99,7 +152,7 @@ public class GameManager : MonoBehaviour
                         {
                             selectedTile[k].gameObject.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.None;
                             selectedTile[k].gameObject.GetComponent<BoxCollider>().enabled = true;
-                            selectedTile[k].gameObject.SetActive(false);                     
+                            selectedTile[k].gameObject.SetActive(false);
                         }
                         selectedTile.RemoveRange(i - 1, 3);
                         //Shift all the other tiles back
@@ -108,6 +161,11 @@ public class GameManager : MonoBehaviour
                             Debug.Log("reset");
                             StartCoroutine(selectedTile[j].Shift(slotLocations[j], Quaternion.identity, moveSpeed));
                         }
+                        levelStars += combo + 1;
+                        starCount.text = levelStars.ToString();
+                        comboBar.SetActive(true);
+                        currentComboTime = comboTime;
+                        combo++;
                     }
                 //break out of loop
                 break;
@@ -115,7 +173,6 @@ public class GameManager : MonoBehaviour
             //If any tile does not match new tile shift it right
             else
             {
-                Debug.Log("Shifting to right");
                 StartCoroutine(selectedTile[i].Shift(slotLocations[i + 1], Quaternion.identity, moveSpeed));
             }
         }
@@ -128,11 +185,17 @@ public class GameManager : MonoBehaviour
         //After loop if list count is 7, fail the game
         if (selectedTile.Count >= 7)
         {
-            //fail state
-            //enable fail menu
+            GetComponent<Menu>().OpenFailMenu("OUT OF SLOTS");
         }
     }
-    public void Restart()
+    public void StartLevel()
+    {
+        SpawnTiles(levelData[1]);
+        timer = levelData[1].playTime;
+        levelText.text = levelData[1].displayName;
+        timerIsRunning = true;
+    }
+    public void ClearLevel()
     {
         for (int i = 0; i < selectedTile.Count; i++)
         {
@@ -140,8 +203,21 @@ public class GameManager : MonoBehaviour
             selectedTile[i].GetComponent<BoxCollider>().enabled = true;
         }
         selectedTile.Clear();
-        GetComponent<Menu>().CloseMenu();
         tilePool.DeactivatePooledObject();
-        SpawnTiles(levelData[1]);
+        combo = 0;
+        currentComboTime = 0;
+    }
+    public void Restart()
+    {
+        ClearLevel();
+        GetComponent<Menu>().CloseMenu();
+        StartLevel();
+    }
+    public void DoneLoading()
+    {
+        playButton.SetActive(true);
+        starCounter.SetActive(true);
+        settingsButton.SetActive(true);
+        mainLevelText.text = "LEVEL\n" + levelData[1].level;
     }
 }

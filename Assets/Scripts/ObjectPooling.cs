@@ -18,6 +18,7 @@ public class ObjectPooling : MonoBehaviour
             tmp.SetActive(false);
             pooledObjects.Add(tmp);
         }
+        GameManager.instance.DoneLoading();
     }
     public GameObject GetPooledObject(Vector3 spawnPoint, Quaternion spawnRotation)
     {
