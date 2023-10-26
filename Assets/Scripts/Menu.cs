@@ -22,6 +22,7 @@ public class Menu : MonoBehaviour
             menu.enabled = true;
             pauseBackground.SetActive(true);
             GameManager.instance.TimerStatus();
+            SoundManager.instance.PlaySound(SoundManager.Sound.buttonPress);
         }
     }
     public void CloseMenu()
@@ -31,6 +32,7 @@ public class Menu : MonoBehaviour
         winMenu.enabled = false;
         pauseBackground.SetActive(false);
         GameManager.instance.TimerStatus();
+        SoundManager.instance.PlaySound(SoundManager.Sound.buttonPress);
     }
     public void OpenFailMenu(string failMessage)
     {
@@ -53,6 +55,7 @@ public class Menu : MonoBehaviour
         gameUI.enabled = false;
         mainMenu.enabled = true;
         selector.SetActive(false);
+        SoundManager.instance.PlaySound(SoundManager.Sound.buttonPress);
     }
     public void OpenWinMenu()
     {

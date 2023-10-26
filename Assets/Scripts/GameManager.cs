@@ -49,7 +49,6 @@ public class GameManager : MonoBehaviour, IDataPersistence
     [SerializeField] private GameObject playButton;
     [SerializeField] private GameObject starCounter;
     [SerializeField] private TMP_Text totalStarsText;
-    [SerializeField] private GameObject settingsButton;
     private float timer;
     private bool timerIsRunning = false;
 
@@ -99,6 +98,7 @@ public class GameManager : MonoBehaviour, IDataPersistence
                 timer = 0;
                 timerIsRunning = false;
                 GetComponent<Menu>().OpenFailMenu("TIME'S UP!");
+                SoundManager.instance.PlaySound(SoundManager.Sound.levelFail);
             }
         }
     }
@@ -111,6 +111,8 @@ public class GameManager : MonoBehaviour, IDataPersistence
     }
     void SpawnTiles(LevelData levelData)
     {
+        //Play sound
+        SoundManager.instance.PlaySound(SoundManager.Sound.tileDrop);
         //Iterate through all tile types
         for (int type = 0; type < levelData.tileTypeCount; type++)
         {
@@ -158,6 +160,7 @@ public class GameManager : MonoBehaviour, IDataPersistence
             {
                 tileAdded = true;
                 Debug.Log("TileAdded");
+                SoundManager.instance.PlaySound(SoundManager.Sound.tileSelect);
                 selectedTile.Insert(i + 1, newTile);
                 StartCoroutine(newTile.Shift(slotLocations[i + 1], Quaternion.identity, moveSpeed));
                 //Check if the next tile is also of the same type (3 matching tiles), if so, delete all 3 and add score
@@ -171,6 +174,7 @@ public class GameManager : MonoBehaviour, IDataPersistence
                             selectedTile[k].gameObject.SetActive(false);
                         }
                         selectedTile.RemoveRange(i - 1, 3);
+                        SoundManager.instance.PlaySound(SoundManager.Sound.tileComplete);
                         //Shift all the other tiles back
                         for (int j = 0; j < selectedTile.Count; j++)
                         {
@@ -191,6 +195,7 @@ public class GameManager : MonoBehaviour, IDataPersistence
                             totalStarsText.text = totalStars.ToString();
                             winStarCount.text = levelStars.ToString();
                             GetComponent<Menu>().OpenWinMenu();
+                            SoundManager.instance.PlaySound(SoundManager.Sound.levelComplete);
                         }
                     }
                 //break out of loop
@@ -206,12 +211,14 @@ public class GameManager : MonoBehaviour, IDataPersistence
         if (!tileAdded)
         {
             selectedTile.Insert(0, newTile);
+            SoundManager.instance.PlaySound(SoundManager.Sound.tileSelect);
             StartCoroutine(newTile.Shift(slotLocations[0], Quaternion.identity, moveSpeed));
         }
         //After loop if list count is 7, fail the game
         if (selectedTile.Count >= 7)
         {
             GetComponent<Menu>().OpenFailMenu("OUT OF SLOTS");
+            SoundManager.instance.PlaySound(SoundManager.Sound.levelFail);
         }
     }
     public void StartLevel()
@@ -246,7 +253,6 @@ public class GameManager : MonoBehaviour, IDataPersistence
     {
         playButton.SetActive(true);
         starCounter.SetActive(true);
-        settingsButton.SetActive(true);
         mainLevelText.text = "LEVEL\n" + levelData[level].level;
         totalStarsText.text = totalStars.ToString();
     }
