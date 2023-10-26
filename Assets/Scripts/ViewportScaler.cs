@@ -60,14 +60,3 @@ public class ViewportScaler : MonoBehaviour
         }
     }
 }
-
-/*Todo
- * Need script to spawn tiles randomly accross the board but dont let them collide
- * Script should read the list from scriptable object and spawn each entry
- * The tile prefabs are the same, the list only changes the type + image of the tile
- * Spawned tile can be flipped on its back but avoid this when spawning
- * Need script to hold collected tile, scoring and failure
- * (Upon mouse enter highlight, upon mouse leave unhighlight, upon mouse up select)
- * Use scriptable object to spawn a level includes: Name + Level + Playtime + A list of tiles to spawn (tiles spawn in group of 3s so each entry in the list represents 3 tiles)
- * To cut down on loading use only 1 scene. Upon launching the game spawn the menu + pooled tiles upon each level enable the tiles and move them.
- */

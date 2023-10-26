@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
-public class GameManager : MonoBehaviour
+public class GameManager : MonoBehaviour, IDataPersistence
 {
     //Make it a singleton
     public static GameManager instance;
@@ -15,6 +15,17 @@ public class GameManager : MonoBehaviour
             instance = this;
     }
 
+    public void LoadData(GameData data)
+    {
+        totalStars = data.stars;
+        level = data.level;
+    }
+
+    public void SaveData(ref GameData data)
+    {
+        data.stars = totalStars;
+        data.level = level;
+    }
 
     [Header("Level Manager")]
     [SerializeField] private LevelData[] levelData;
@@ -22,6 +33,9 @@ public class GameManager : MonoBehaviour
     private float currentComboTime = 0;
     private int combo = 0;
     private int levelStars = 0;
+    private int totalStars = 0;
+    private int tileCount = 0;
+    private int level = 0;
 
     [Header("UI Elements")]
     [SerializeField] private TMP_Text timerText;
@@ -30,9 +44,11 @@ public class GameManager : MonoBehaviour
     [SerializeField] private TMP_Text comboValue;
     [SerializeField] private TMP_Text levelText;
     [SerializeField] private TMP_Text starCount;
+    [SerializeField] private TMP_Text winStarCount;
     [SerializeField] private TMP_Text mainLevelText;
     [SerializeField] private GameObject playButton;
     [SerializeField] private GameObject starCounter;
+    [SerializeField] private TMP_Text totalStarsText;
     [SerializeField] private GameObject settingsButton;
     private float timer;
     private bool timerIsRunning = false;
@@ -166,6 +182,16 @@ public class GameManager : MonoBehaviour
                         comboBar.SetActive(true);
                         currentComboTime = comboTime;
                         combo++;
+                        tileCount--;
+                        if (tileCount <= 0)
+                        {
+                            //Level completed
+                            level++;
+                            totalStars += levelStars;
+                            totalStarsText.text = totalStars.ToString();
+                            winStarCount.text = levelStars.ToString();
+                            GetComponent<Menu>().OpenWinMenu();
+                        }
                     }
                 //break out of loop
                 break;
@@ -190,9 +216,12 @@ public class GameManager : MonoBehaviour
     }
     public void StartLevel()
     {
-        SpawnTiles(levelData[1]);
-        timer = levelData[1].playTime;
-        levelText.text = levelData[1].displayName;
+        SpawnTiles(levelData[level]);
+        tileCount = 0;
+        foreach (int count in levelData[level].number)
+            tileCount += count;
+        timer = levelData[level].playTime;
+        levelText.text = levelData[level].displayName;
         timerIsRunning = true;
     }
     public void ClearLevel()
@@ -218,6 +247,7 @@ public class GameManager : MonoBehaviour
         playButton.SetActive(true);
         starCounter.SetActive(true);
         settingsButton.SetActive(true);
-        mainLevelText.text = "LEVEL\n" + levelData[1].level;
+        mainLevelText.text = "LEVEL\n" + levelData[level].level;
+        totalStarsText.text = totalStars.ToString();
     }
 }

@@ -5,13 +5,16 @@ using TMPro;
 
 public class Menu : MonoBehaviour
 {
+    [Header("UI Elements")]
     [SerializeField] Canvas menu;
     [SerializeField] Canvas gameUI;
     [SerializeField] Canvas mainMenu;
     [SerializeField] Canvas failMenu;
+    [SerializeField] Canvas winMenu;
     [SerializeField] TMP_Text failText;
     [SerializeField] GameObject pauseBackground;
     [SerializeField] GameObject selector;
+
     public void OpenMenu()
     {
         if (!menu.enabled)
@@ -25,6 +28,7 @@ public class Menu : MonoBehaviour
     {
         menu.enabled = false;
         failMenu.enabled = false;
+        winMenu.enabled = false;
         pauseBackground.SetActive(false);
         GameManager.instance.TimerStatus();
     }
@@ -49,5 +53,10 @@ public class Menu : MonoBehaviour
         gameUI.enabled = false;
         mainMenu.enabled = true;
         selector.SetActive(false);
+    }
+    public void OpenWinMenu()
+    {
+        winMenu.enabled = true;
+        GameManager.instance.TimerStatus();
     }
 }
