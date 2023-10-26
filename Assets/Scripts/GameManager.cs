@@ -98,7 +98,6 @@ public class GameManager : MonoBehaviour, IDataPersistence
                 timer = 0;
                 timerIsRunning = false;
                 GetComponent<Menu>().OpenFailMenu("TIME'S UP!");
-                SoundManager.instance.PlaySound(SoundManager.Sound.levelFail);
             }
         }
     }
@@ -191,9 +190,12 @@ public class GameManager : MonoBehaviour, IDataPersistence
                         {
                             //Level completed
                             level++;
+                            if (level > 3)
+                                level = 0;
                             totalStars += levelStars;
                             totalStarsText.text = totalStars.ToString();
                             winStarCount.text = levelStars.ToString();
+                            mainLevelText.text = "LEVEL\n" + levelData[level].level;
                             GetComponent<Menu>().OpenWinMenu();
                             SoundManager.instance.PlaySound(SoundManager.Sound.levelComplete);
                         }
@@ -229,6 +231,7 @@ public class GameManager : MonoBehaviour, IDataPersistence
             tileCount += count;
         timer = levelData[level].playTime;
         levelText.text = levelData[level].displayName;
+        starCount.text = levelStars.ToString();
         timerIsRunning = true;
     }
     public void ClearLevel()
@@ -240,6 +243,8 @@ public class GameManager : MonoBehaviour, IDataPersistence
         }
         selectedTile.Clear();
         tilePool.DeactivatePooledObject();
+        levelStars = 0;
+
         combo = 0;
         currentComboTime = 0;
     }

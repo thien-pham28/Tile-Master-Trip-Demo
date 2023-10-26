@@ -17,9 +17,9 @@ MonoBehaviour:
   playTime: 60
   tileTypeCount: 3
   type:
-  - Tile_0
+  - Tile_1
   - Tile_2
-  - Tile_4
+  - Tile_3
   tileSprite:
   - {fileID: 339247483, guid: 2b3027a6bafc5604a82a342e8e172fce, type: 3}
   - {fileID: -1086747831, guid: 2b3027a6bafc5604a82a342e8e172fce, type: 3}

@@ -10,12 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d9920cd4dae13644c8f506f63a5cac96, type: 3}
-  m_Name: Level 2
+  m_Name: Level 4
   m_EditorClassIdentifier: 
-  level: 2
-  displayName: Level 2
-  playTime: 180
-  tileTypeCount: 6
+  level: 4
+  displayName: Level 4
+  playTime: 1080
+  tileTypeCount: 9
   type:
   - Tile_1
   - Tile_2
@@ -23,6 +23,9 @@ MonoBehaviour:
   - Tile_4
   - Tile_5
   - Tile_7
+  - Tile_8
+  - Tile_9
+  - Tile_10
   tileSprite:
   - {fileID: 339247483, guid: 2b3027a6bafc5604a82a342e8e172fce, type: 3}
   - {fileID: -1086747831, guid: 2b3027a6bafc5604a82a342e8e172fce, type: 3}
@@ -30,4 +33,7 @@ MonoBehaviour:
   - {fileID: -2043719110, guid: 2b3027a6bafc5604a82a342e8e172fce, type: 3}
   - {fileID: 1001196088, guid: 2b3027a6bafc5604a82a342e8e172fce, type: 3}
   - {fileID: 845857112, guid: 2b3027a6bafc5604a82a342e8e172fce, type: 3}
-  number: 020000000200000002000000020000000200000002000000
+  - {fileID: -654058473, guid: 2b3027a6bafc5604a82a342e8e172fce, type: 3}
+  - {fileID: 1854138402, guid: 2b3027a6bafc5604a82a342e8e172fce, type: 3}
+  - {fileID: -1265121518, guid: 2b3027a6bafc5604a82a342e8e172fce, type: 3}
+  number: 050000000500000005000000050000000500000005000000050000000500000005000000
